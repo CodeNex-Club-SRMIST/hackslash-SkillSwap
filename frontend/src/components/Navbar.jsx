@@ -3,15 +3,15 @@ import { Link } from 'react-router-dom';
 
 function Navbar() {
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold text-blue-600">SkillSwap</Link>
-        <nav className="space-x-4">
-          <Link to="/" className="text-gray-700 hover:text-blue-600">Home</Link>
-          <Link to="/profile" className="text-gray-700 hover:text-blue-600">Profile</Link>
-          <Link to="/match" className="text-gray-700 hover:text-blue-600">Matches</Link>
-        </nav>
-      </div>
+    <header className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md">
+      <nav className="flex justify-between items-center max-w-7xl mx-auto px-4 py-4">
+        <Link to="/" className="text-2xl font-extrabold tracking-tight">SkillSwap</Link>
+        <ul className="flex space-x-6 text-md font-medium">
+          <li><Link to="/" className="hover:text-yellow-300">Home</Link></li>
+          <li><Link to="/match" className="hover:text-yellow-300">Matches</Link></li>
+          <li><Link to="/profile" className="hover:text-yellow-300">Profile</Link></li>
+        </ul>
+      </nav>
     </header>
   );
 }

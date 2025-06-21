@@ -9,7 +9,7 @@ import Match from './pages/Match';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-blue-100 text-gray-800">
+      <div className="min-h-screen flex flex-col w-full bg-gradient-to-br from-slate-50 to-blue-100 text-gray-800 overflow-x-hidden">
         <Navbar />
         <main className="flex-grow w-full px-4 sm:px-6 lg:px-12 py-8">
           <Routes>
