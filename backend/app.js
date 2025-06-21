@@ -1,11 +1,41 @@
 const express = require('express');
-const app = express();
-require('dotenv').config();
+const http = require('http');
+const cors = require('cors');
+const { Server } = require('socket.io');
 
+const app = express();
+const server = http.createServer(app);
+
+app.use(cors());
 app.use(express.json());
 
-const routes = require('./routes');
-app.use('/api', routes);
+const io = new Server(server, {
+  cors: {
+    origin: '*', // Replace with frontend URL in production
+    methods: ['GET', 'POST']
+  }
+});
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+let users = [];
+
+io.on('connection', (socket) => {
+  console.log('A user connected:', socket.id);
+
+  // Send all current users to the newly connected client
+  socket.emit('current-users', users);
+
+  // Receive new match
+  socket.on('new-user', (user) => {
+    users.push(user);
+    io.emit('user-added', user); // broadcast to everyone
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected:', socket.id);
+    // Optionally remove user based on socket.id
+  });
+});
+
+server.listen(5000, () => {
+  console.log('Server listening on port 5000');
+});
