@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { ToastContainer } from "react-toastify";
-import { handleError, handleSuccess } from "../utils"; // Make sure this file exists
+import { handleError, handleSuccess } from "../utils";
+import { signInWithPopup } from "firebase/auth";
+import { auth, provider } from "../firebase";
 
 function Login() {
   const [loginInfo, setLoginInfo] = useState({ email: "", password: "" });
@@ -39,8 +41,23 @@ function Login() {
     }
   };
 
-  const handleGoogleLogin = () => {
-    handleError("Google login not implemented in demo."); // Replace with actual Google Auth logic
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      console.log("Google login successful:", user);
+
+      const token = await user.getIdToken();
+      localStorage.setItem("token", token);
+      localStorage.setItem("loggedInUser", user.displayName);
+
+      handleSuccess("Logged in with Google");
+      navigate("/");
+    } catch (error) {
+      console.error("Google login error:", error);
+      handleError("Google login failed");
+    }
   };
 
   return (
