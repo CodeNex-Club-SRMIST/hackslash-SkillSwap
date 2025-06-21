@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => res.send('SkillSwap API'));
+router.use('/users', require('./user'));
+
+router.get('/', (req, res) => res.send('API Home'));
 
 module.exports = router;
