@@ -19,20 +19,21 @@ const io = new Server(server, {
 let users = [];
 
 io.on('connection', (socket) => {
-  console.log('A user connected:', socket.id);
+  console.log('User connected:', socket.id);
 
-  // Send all current users to the newly connected client
-  socket.emit('current-users', users);
+  // Join a chat room
+  socket.on('join-room', (roomId) => {
+    socket.join(roomId);
+    console.log(`User ${socket.id} joined room ${roomId}`);
+  });
 
-  // Receive new match
-  socket.on('new-user', (user) => {
-    users.push(user);
-    io.emit('user-added', user); // broadcast to everyone
+  // Handle sending messages
+  socket.on('send-message', ({ roomId, message }) => {
+    io.to(roomId).emit('receive-message', message); // broadcast to room
   });
 
   socket.on('disconnect', () => {
-    console.log('A user disconnected:', socket.id);
-    // Optionally remove user based on socket.id
+    console.log('User disconnected:', socket.id);
   });
 });
 
