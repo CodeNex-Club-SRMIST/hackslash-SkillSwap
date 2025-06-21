@@ -9,26 +9,22 @@ function ChatBox({ user1, user2 }) {
   const roomId = [user1, user2].sort().join('-');
 
   useEffect(() => {
-    // Join this user's specific room
-    socket.emit('join-room', roomId);
-    console.log(`[${roomId}] Joined room`);
-
-    // Clear previous chat (optional, per room session)
     setChat([]);
+    socket.emit('join-room', roomId);
 
-    const handleMessage = (msg) => {
-      console.log(`[${roomId}] Message received:`, msg);
-
-      // Only process if it matches current room
-      const senderRoom = [msg.sender, user1 === msg.sender ? user2 : user1].sort().join('-');
-      if (senderRoom === roomId) {
-        setChat((prev) => [...prev, msg]);
-      }
+    const handleHistory = (messages) => {
+      setChat(messages);
     };
 
+    const handleMessage = (msg) => {
+      setChat((prev) => [...prev, msg]);
+    };
+
+    socket.on('chat-history', handleHistory);
     socket.on('receive-message', handleMessage);
 
     return () => {
+      socket.off('chat-history', handleHistory);
       socket.off('receive-message', handleMessage);
     };
   }, [roomId, user1, user2]);
@@ -40,10 +36,7 @@ function ChatBox({ user1, user2 }) {
     const msgObj = {
       sender: user1,
       text: message.trim(),
-      time: new Date().toLocaleTimeString([], {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      timestamp: new Date(),
     };
 
     socket.emit('send-message', { roomId, message: msgObj });
@@ -65,9 +58,7 @@ function ChatBox({ user1, user2 }) {
         {chat.map((msg, idx) => (
           <div
             key={idx}
-            className={`mb-3 flex ${
-              msg.sender === user1 ? 'justify-end' : 'justify-start'
-            }`}
+            className={`mb-3 flex ${msg.sender === user1 ? 'justify-end' : 'justify-start'}`}
           >
             <div
               className={`max-w-xs px-4 py-3 rounded-xl shadow-sm text-sm ${
@@ -78,7 +69,11 @@ function ChatBox({ user1, user2 }) {
             >
               <p className="font-medium break-words">{msg.text}</p>
               <div className="text-[0.65rem] text-right mt-1 opacity-70">
-                {msg.sender === user1 ? 'You' : msg.sender} • {msg.time}
+                {msg.sender === user1 ? 'You' : msg.sender} •{' '}
+                {new Date(msg.timestamp).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
               </div>
             </div>
           </div>
