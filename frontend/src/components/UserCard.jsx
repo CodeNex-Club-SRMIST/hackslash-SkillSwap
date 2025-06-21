@@ -21,10 +21,6 @@ function UserCard({ user }) {
           </p>
         </div>
       </div>
-
-      <button className="mt-6 w-full py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-semibold rounded-lg shadow-md hover:from-indigo-700 hover:to-blue-700 transition-all duration-300">
-        Connect Now 🚀
-      </button>
     </div>
   );
 }
