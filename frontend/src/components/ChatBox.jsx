@@ -9,16 +9,29 @@ function ChatBox({ user1, user2 }) {
   const roomId = [user1, user2].sort().join('-');
 
   useEffect(() => {
+    // Join this user's specific room
     socket.emit('join-room', roomId);
+    console.log(`[${roomId}] Joined room`);
 
-    socket.on('receive-message', (msg) => {
-      setChat((prev) => [...prev, msg]);
-    });
+    // Clear previous chat (optional, per room session)
+    setChat([]);
+
+    const handleMessage = (msg) => {
+      console.log(`[${roomId}] Message received:`, msg);
+
+      // Only process if it matches current room
+      const senderRoom = [msg.sender, user1 === msg.sender ? user2 : user1].sort().join('-');
+      if (senderRoom === roomId) {
+        setChat((prev) => [...prev, msg]);
+      }
+    };
+
+    socket.on('receive-message', handleMessage);
 
     return () => {
-      socket.off('receive-message');
+      socket.off('receive-message', handleMessage);
     };
-  }, [roomId]);
+  }, [roomId, user1, user2]);
 
   const handleSend = (e) => {
     e.preventDefault();
