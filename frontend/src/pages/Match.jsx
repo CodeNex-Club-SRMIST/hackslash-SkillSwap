@@ -1,20 +1,22 @@
+// src/pages/Match.jsx
 import React, { useEffect, useState } from 'react';
 import UserCard from '../components/UserCard';
-import ChatBox from '../components/ChatBox'; // 👈 import ChatBox
-import { io } from 'socket.io-client';
+import ChatBox from '../components/ChatBox';
+import socket from '../socket';
 
-const socket = io('http://localhost:5000'); // Replace with your backend URL
-const currentUser = 'Saksham'; // Replace with actual logged-in user if needed
-
+localStorage.setItem('skillSwapUser', name);
+const currentUser = localStorage.getItem('skillSwapUser') || 'Guest'; // Get current user from localStorage
 function Match() {
   const [users, setUsers] = useState([]);
-  const [chatWith, setChatWith] = useState(null); // 👈 selected user to chat with
+  const [chatWith, setChatWith] = useState(null); // selected user to chat with
 
   useEffect(() => {
+    // Get current user list
     socket.on('current-users', (data) => {
       setUsers(data);
     });
 
+    // Listen for real-time additions
     socket.on('user-added', (user) => {
       setUsers((prev) => [...prev, user]);
     });
@@ -31,7 +33,6 @@ function Match() {
         🔗 Live Skill Matches
       </h2>
 
-      {/* ChatBox shown when a user is selected */}
       {chatWith && (
         <div className="mb-10">
           <ChatBox user1={currentUser} user2={chatWith} socket={socket} />
@@ -45,8 +46,6 @@ function Match() {
           {users.map((user, idx) => (
             <div key={idx} className="space-y-2">
               <UserCard user={user} />
-
-              {/* Show Chat button only if not the current user */}
               {user.name !== currentUser && (
                 <button
                   onClick={() => setChatWith(user.name)}

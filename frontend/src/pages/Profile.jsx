@@ -1,57 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
+import socket from '../socket'; // or './socket' if you're in the same folder
 
 function Profile() {
+  const [name, setName] = useState('');
+  const [skillOffer, setSkillOffer] = useState('');
+  const [skillWant, setSkillWant] = useState('');
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!name || !skillOffer || !skillWant) return;
+
+    socket.emit('new-user', { name, skillOffer, skillWant });
+
+    setName('');
+    setSkillOffer('');
+    setSkillWant('');
+    setSuccess(true);
+
+    setTimeout(() => setSuccess(false), 3000);
+  };
+
   return (
-    <section className="max-w-2xl w-full px-4 py-20 mx-auto">
-      <h2 className="text-4xl font-extrabold text-slate-800 dark:text-white mb-10 text-center sm:text-left tracking-tight">
-        🧠 Your Skill Profile
-      </h2>
+    <section className="px-4 py-12 min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+      <div className="max-w-xl mx-auto bg-white dark:bg-slate-900 p-8 rounded-2xl shadow-2xl transition">
+        <h2 className="text-3xl font-bold mb-6 text-center text-slate-800 dark:text-white">
+          🎯 Create Your Skill Profile
+        </h2>
 
-      <form className="space-y-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-2xl rounded-2xl p-8 transition-all duration-300">
-        {/* Name Field */}
-        <div>
-          <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-2">
-            Your Name
-          </label>
-          <input
-            type="text"
-            placeholder="e.g., Jane Creator"
-            className="w-full p-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-          />
-        </div>
+        {success && (
+          <div className="mb-4 p-3 rounded bg-green-100 text-green-700 text-center font-medium dark:bg-green-900 dark:text-green-300">
+            ✅ Profile submitted successfully!
+          </div>
+        )}
 
-        {/* Skill Offer */}
-        <div>
-          <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-2">
-            Skill You Offer
-          </label>
-          <input
-            type="text"
-            placeholder="e.g., Motion Design"
-            className="w-full p-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-          />
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">
+              Your Name
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. Saksham"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+            />
+          </div>
 
-        {/* Skill Want */}
-        <div>
-          <label className="block text-slate-700 dark:text-slate-300 font-semibold mb-2">
-            Skill You Want
-          </label>
-          <input
-            type="text"
-            placeholder="e.g., Full-stack Development"
-            className="w-full p-3 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
-          />
-        </div>
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">
+              Skill You Offer
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. React.js"
+              value={skillOffer}
+              onChange={(e) => setSkillOffer(e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+            />
+          </div>
 
-        {/* Save Button */}
-        <button
-          type="submit"
-          className="w-full py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl shadow-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300"
-        >
-          💾 Save Profile
-        </button>
-      </form>
+          <div>
+            <label className="block text-sm font-semibold text-slate-600 dark:text-slate-300 mb-1">
+              Skill You Want
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. UI/UX Design"
+              value={skillWant}
+              onChange={(e) => setSkillWant(e.target.value)}
+              className="w-full px-4 py-2 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none dark:bg-slate-800 dark:border-slate-700 dark:text-white"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-lg font-bold text-lg hover:scale-[1.02] transition-transform shadow-md hover:from-blue-700 hover:to-indigo-700"
+          >
+            🚀 Submit Profile
+          </button>
+        </form>
+      </div>
     </section>
   );
 }
