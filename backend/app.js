@@ -5,6 +5,8 @@ const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const ChatMessage = require('./models/ChatMessage');
 require('dotenv').config();
+console.log('🔍 Loaded DB_URI:', process.env.DB_URI);
+
 
 const app = express();
 const server = http.createServer(app);

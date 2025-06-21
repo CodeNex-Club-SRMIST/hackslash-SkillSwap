@@ -20,6 +20,8 @@ function Navbar() {
             { name: 'Home', path: '/' },
             { name: 'Matches', path: '/match' },
             { name: 'Profile', path: '/profile' },
+            { name: 'Login', path: '/login' },
+            { name: 'Signup', path: '/signup' },
           ].map((link) => (
             <li key={link.name}>
               <Link
