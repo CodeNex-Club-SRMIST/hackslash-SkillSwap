@@ -9,15 +9,20 @@ import Match from './pages/Match';
 function App() {
   return (
     <Router>
-      <div className="min-h-screen flex flex-col w-full bg-gradient-to-br from-slate-50 to-blue-100 text-gray-800 overflow-x-hidden">
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-50 to-blue-100 dark:from-slate-900 dark:to-slate-800 text-gray-800 dark:text-gray-100 overflow-x-hidden">
+        {/* Top Navbar */}
         <Navbar />
-        <main className="flex-grow w-full px-4 sm:px-6 lg:px-12 py-8">
+
+        {/* Main Content */}
+        <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/match" element={<Match />} />
           </Routes>
         </main>
+
+        {/* Footer */}
         <Footer />
       </div>
     </Router>
