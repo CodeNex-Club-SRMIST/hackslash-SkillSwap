@@ -35,6 +35,7 @@ function ChatBox({ user1, user2 }) {
 
     const msgObj = {
       sender: user1,
+      receiver: user2,
       text: message.trim(),
       timestamp: new Date(),
     };
@@ -69,7 +70,7 @@ function ChatBox({ user1, user2 }) {
             >
               <p className="font-medium break-words">{msg.text}</p>
               <div className="text-[0.65rem] text-right mt-1 opacity-70">
-                {msg.sender === user1 ? 'You' : msg.sender} •{' '}
+                {msg.sender === user1 ? 'You' : msg.sender} → {msg.receiver} •{' '}
                 {new Date(msg.timestamp).toLocaleTimeString([], {
                   hour: '2-digit',
                   minute: '2-digit',
