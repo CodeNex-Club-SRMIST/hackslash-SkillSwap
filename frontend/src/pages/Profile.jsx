@@ -7,13 +7,36 @@ function Profile() {
   const [skillWant, setSkillWant] = useState('');
   const [success, setSuccess] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!name || !skillOffer || !skillWant) return;
 
+    // Save to localStorage
+    localStorage.setItem('skillOffer', skillOffer);
+    localStorage.setItem('skillWant', skillWant);
+    localStorage.setItem('profileName', name);
+
+    // Send to backend
+    try {
+      await fetch('http://localhost:5000/api/profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: localStorage.getItem('userId'), // Ensure userId is set during login/signup
+          name,
+          skillOffer,
+          skillWant
+        })
+      });
+    } catch (error) {
+      console.error('Error saving profile to backend:', error);
+    }
+
+    // Emit via socket
     socket.emit('new-user', { name, skillOffer, skillWant });
 
+    // Reset form
     setName('');
     setSkillOffer('');
     setSkillWant('');
