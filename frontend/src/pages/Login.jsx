@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utils";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../firebase";
@@ -29,7 +28,7 @@ function Login() {
 
       const result = await res.json();
       if (result.success) {
-        handleSuccess(result.message);
+        handleSuccess(`Welcome back, ${result.name || "User"}!`);
         localStorage.setItem("token", result.jwtToken);
         localStorage.setItem("loggedInUser", result.name);
         setTimeout(() => navigate("/"), 1000);
@@ -50,7 +49,7 @@ function Login() {
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", user.displayName);
 
-      handleSuccess("Logged in with Google");
+      handleSuccess(`Welcome, ${user.displayName}!`);
       navigate("/");
     } catch (error) {
       handleError("Google login failed");
@@ -111,8 +110,6 @@ function Login() {
             Sign up
           </Link>
         </p>
-
-        <ToastContainer />
       </div>
     </div>
   );

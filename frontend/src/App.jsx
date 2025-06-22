@@ -6,7 +6,10 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Match from './pages/Match';
 import Login from './pages/Login';
-import Signup from './pages/Signup'; // ✅ Import Signup
+import Signup from './pages/Signup'; 
+import Dashboard from './pages/Dashboard';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -23,12 +26,16 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/match" element={<Match />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} /> {/* ✅ Add Signup route */}
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </main>
 
         {/* Footer */}
         <Footer />
+
+        {/* Global Toast Notifications */}
+        <ToastContainer position="top-right" autoClose={3000} theme="colored" />
       </div>
     </Router>
   );
