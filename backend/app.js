@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const { Server } = require('socket.io');
 const ChatMessage = require('./models/ChatMessage');
 const profileRoutes = require('./routes/profile');
+const aiRoutes = require('./routes/aiRoutes');
+
 require('dotenv').config();
 
 console.log('🔍 Loaded DB_URI:', process.env.DB_URI);
@@ -16,6 +18,7 @@ const server = http.createServer(app);
 app.use(cors());
 app.use(express.json()); // for handling POST/JSON payloads
 app.use('/api/profile', profileRoutes);
+app.use('/api/ai', aiRoutes);
 
 // MongoDB connection
 mongoose.connect(process.env.DB_URI, {
