@@ -1,18 +1,23 @@
-// utils/index.js
 import { toast } from 'react-toastify';
 
+let toastId = null;
+
 export const handleSuccess = (message) => {
-  toast.success(message, {
-    position: 'top-right',
-    autoClose: 3000,
-    theme: 'light',
-  });
+  if (!toast.isActive(toastId)) {
+    toastId = toast.success(message, {
+      position: 'top-right',
+      autoClose: 3000,
+      theme: 'light',
+    });
+  }
 };
 
 export const handleError = (message) => {
-  toast.error(message, {
-    position: 'top-right',
-    autoClose: 3000,
-    theme: 'colored',
-  });
+  if (!toast.isActive(toastId)) {
+    toastId = toast.error(message, {
+      position: 'top-right',
+      autoClose: 3000,
+      theme: 'colored',
+    });
+  }
 };

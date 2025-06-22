@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { handleError, handleSuccess } from "../utils";
-import { signInWithPopup } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signInWithPopup
+} from "firebase/auth";
 import { auth, provider } from "../firebase";
 
 function Login() {
@@ -20,23 +23,18 @@ function Login() {
     if (!email || !password) return handleError("All fields required");
 
     try {
-      const res = await fetch("https://deploy-mern-app-1-api.vercel.app/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginInfo),
-      });
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      const token = await user.getIdToken();
 
-      const result = await res.json();
-      if (result.success) {
-        handleSuccess(`Welcome back, ${result.name || "User"}!`);
-        localStorage.setItem("token", result.jwtToken);
-        localStorage.setItem("loggedInUser", result.name);
-        setTimeout(() => navigate("/"), 1000);
-      } else {
-        handleError(result?.error?.details?.[0]?.message || result.message);
-      }
+      localStorage.setItem("token", token);
+      localStorage.setItem("loggedInUser", user.displayName || "User");
+      localStorage.setItem("userId", user.uid);
+
+      handleSuccess("Login successful");
+      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (err) {
-      handleError("Something went wrong");
+      handleError("Login failed: " + err.message);
     }
   };
 
@@ -47,12 +45,13 @@ function Login() {
       const token = await user.getIdToken();
 
       localStorage.setItem("token", token);
-      localStorage.setItem("loggedInUser", user.displayName);
+      localStorage.setItem("loggedInUser", user.displayName || "Google User");
+      localStorage.setItem("userId", user.uid);
 
-      handleSuccess(`Welcome, ${user.displayName}!`);
+      handleSuccess(`Welcome, ${user.displayName || "Google User"}!`);
       navigate("/");
     } catch (error) {
-      handleError("Google login failed");
+      handleError("Google login failed: " + error.message);
     }
   };
 
@@ -105,7 +104,7 @@ function Login() {
         </button>
 
         <p className="mt-5 text-center text-sm text-gray-400">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link to="/signup" className="text-indigo-400 hover:underline font-medium">
             Sign up
           </Link>

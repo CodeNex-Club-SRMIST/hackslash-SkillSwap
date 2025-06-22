@@ -3,11 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { ToastContainer } from "react-toastify";
 import { handleError, handleSuccess } from "../utils";
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithPopup
+} from "firebase/auth";
+import { auth, provider, db } from "../firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
 
 function Signup() {
-  const [signupInfo, setSignupInfo] = useState({ name: "", email: "", password: "" });
+  const [signupInfo, setSignupInfo] = useState({
+    name: "",
+    email: "",
+    password: ""
+  });
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -18,24 +26,34 @@ function Signup() {
   const handleSignup = async (e) => {
     e.preventDefault();
     const { name, email, password } = signupInfo;
-    if (!name || !email || !password) return handleError("All fields are required");
+    if (!name || !email || !password)
+      return handleError("All fields are required");
 
     try {
-      const res = await fetch("https://deploy-mern-app-1-api.vercel.app/auth/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(signupInfo),
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await setDoc(doc(db, "users", user.uid), {
+        name,
+        email,
+        skillsOffered: [],
+        skillsWanted: [],
+        createdAt: new Date()
       });
 
-      const result = await res.json();
-      if (result.success) {
-        handleSuccess(result.message);
-        setTimeout(() => navigate("/login"), 1000);
-      } else {
-        handleError(result?.error?.details?.[0]?.message || result.message);
-      }
+      const token = await user.getIdToken();
+      localStorage.setItem("token", token);
+      localStorage.setItem("loggedInUser", name);
+      localStorage.setItem("userId", user.uid);
+
+      handleSuccess("Account created successfully");
+      setTimeout(() => navigate("/"), 1000);
     } catch (err) {
-      handleError("Something went wrong.");
+      console.error("Signup Error:", err);
+      handleError(err.message);
     }
   };
 
@@ -43,22 +61,39 @@ function Signup() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      const token = await user.getIdToken();
 
+      const userRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userRef);
+
+      if (!docSnap.exists()) {
+        await setDoc(userRef, {
+          name: user.displayName || "Google User",
+          email: user.email,
+          skillsOffered: [],
+          skillsWanted: [],
+          createdAt: new Date()
+        });
+      }
+
+      const token = await user.getIdToken();
       localStorage.setItem("token", token);
-      localStorage.setItem("loggedInUser", user.displayName);
+      localStorage.setItem("loggedInUser", user.displayName || "Google User");
+      localStorage.setItem("userId", user.uid);
 
       handleSuccess("Signed up with Google");
       navigate("/");
     } catch (error) {
-      handleError("Google signup failed");
+      console.error("Google Signup Error:", error);
+      handleError(error.message);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black px-4 text-white">
       <div className="bg-gray-900 border border-gray-700 shadow-xl rounded-2xl p-8 max-w-md w-full">
-        <h2 className="text-3xl font-bold text-center text-purple-400 mb-6">Create Account</h2>
+        <h2 className="text-3xl font-bold text-center text-purple-400 mb-6">
+          Create Account
+        </h2>
 
         <form className="space-y-5" onSubmit={handleSignup}>
           <div>
@@ -117,7 +152,10 @@ function Signup() {
 
         <p className="mt-5 text-center text-sm text-gray-400">
           Already have an account?{" "}
-          <Link to="/login" className="text-purple-400 hover:underline font-medium">
+          <Link
+            to="/login"
+            className="text-purple-400 hover:underline font-medium"
+          >
             Log in
           </Link>
         </p>
@@ -127,5 +165,11 @@ function Signup() {
     </div>
   );
 }
+
+// NOTE: If you see a "transport error" in the console but signup works and data is stored in Firebase,
+// this is usually a warning from Firebase or the browser and can be ignored unless it blocks functionality.
+
+// If you get a "Bad Gateway" error on login, check your login code for any API calls to a backend server.
+// Make sure your backend is running and the endpoint URL is correct. If you use only Firebase Auth, you should not get a 502 error.
 
 export default Signup;
