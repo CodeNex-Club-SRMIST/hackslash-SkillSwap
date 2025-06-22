@@ -2,7 +2,7 @@
 
 **SkillSwap** is a unique, real-time skill barter platform where users can trade their skills with each other. It's a modern digital version of the barter system — no money involved! Users can offer their expertise (e.g., web development, design) and receive other skills in return (e.g., marketing, content creation). 
 
-This project was built as part of a **hackathon** by a 2-person team using the **MERN stack** and real-time communication features.
+This project was built as part of a **hackathon** using the **MERN stack** and real-time communication features.
 
 ---
 
@@ -11,9 +11,7 @@ This project was built as part of a **hackathon** by a 2-person team using the *
 - **Skill Profiles**: Users create profiles showcasing their skills (what they offer and what they want).
 - **Smart Matchmaking**: Real-time skill-matching algorithm based on skill tags, availability, and ratings.
 - **Live Chat**: Real-time chat for negotiating trades with optional contracts.
-- **Location Awareness**: Optional proximity matching for face-to-face skills exchange.
 - **Trade Valuation**: AI-based estimation of fair skill trade values.
-- **Reputation System**: Gamified user profiles with XP, badges, and "SkillCoins".
 
 ---
 
@@ -22,14 +20,13 @@ This project was built as part of a **hackathon** by a 2-person team using the *
 - **Frontend**:
   - React.js + Tailwind CSS (UI)
   - WebSockets (real-time chat)
-  - Google Maps API (location matching)
   
 - **Backend**:
   - Node.js + Express.js
   - MongoDB for database
   - Socket.IO for real-time communication
-  - OpenAI API (optional AI-powered trade value estimation)
-  - JWT for user authentication
+  - Google Gemini API (optional AI-powered trade value estimation)
+  - Google O-Auth for user authentication
   
 ---
 
@@ -43,9 +40,6 @@ We use a smart matchmaking system based on user skills, availability, and proxim
 
 ### 3. **Live Chat and Negotiation**
 A chat feature allows users to negotiate their skills exchange in real-time. Users can also create and manage skill barter contracts.
-
-### 4. **Gamified Reputation System**
-Earn **SkillCoins** for successful skill trades, gain **badges**, and level up your profile based on feedback and activity.
 
 ---
 
@@ -65,7 +59,7 @@ To set up the project locally:
 1. **Clone the repo**:
     ```bash
     git clone https://github.com/CodeNex-Club-SRMIST/hackslash-pixelpilots-sakshambajpai1604-armaanit.git
-    cd skill-swap
+    cd hackslash-pixelpilots-sakshambajpai1604-armaanit
     ```
 
 2. **Backend Setup**:
@@ -81,7 +75,7 @@ To set up the project locally:
       ```
       DB_URI=mongodb://localhost/skill-swap
       JWT_SECRET=your_secret_key
-      GOOGLE_MAPS_API_KEY=your_api_key
+      GEMINI_API_KEY=your_gemini_api_key
       ```
     - Run the backend server:
     ```bash
