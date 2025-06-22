@@ -33,25 +33,25 @@ function Navbar() {
               Home
             </Link>
           </li>
-          <li>
-            <Link
-              to="/match"
-              className={`hover:text-yellow-300 ${isActive('/match') ? 'text-yellow-300 font-semibold' : ''}`}
-            >
-              Matches
-            </Link>
-          </li>
-          <li>
-            <Link
-              to="/profile"
-              className={`hover:text-yellow-300 ${isActive('/profile') ? 'text-yellow-300 font-semibold' : ''}`}
-            >
-              Profile
-            </Link>
-          </li>
 
-          {isLoggedIn ? (
+          {isLoggedIn && (
             <>
+              <li>
+                <Link
+                  to="/match"
+                  className={`hover:text-yellow-300 ${isActive('/match') ? 'text-yellow-300 font-semibold' : ''}`}
+                >
+                  Matches
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/profile"
+                  className={`hover:text-yellow-300 ${isActive('/profile') ? 'text-yellow-300 font-semibold' : ''}`}
+                >
+                  Profile
+                </Link>
+              </li>
               <li>
                 <Link
                   to="/dashboard"
@@ -66,7 +66,9 @@ function Navbar() {
                 </button>
               </li>
             </>
-          ) : (
+          )}
+
+          {!isLoggedIn && (
             <>
               <li>
                 <Link
