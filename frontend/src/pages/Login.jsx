@@ -45,72 +45,69 @@ function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-
-      console.log("Google login successful:", user);
-
       const token = await user.getIdToken();
+
       localStorage.setItem("token", token);
       localStorage.setItem("loggedInUser", user.displayName);
 
       handleSuccess("Logged in with Google");
       navigate("/");
     } catch (error) {
-      console.error("Google login error:", error);
       handleError("Google login failed");
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-200 to-indigo-200 p-4">
-      <div className="bg-white shadow-xl rounded-xl p-8 max-w-md w-full">
-        <h2 className="text-2xl font-bold text-center mb-6 text-indigo-700">Welcome Back 👋</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-tr from-black via-gray-900 to-gray-800 px-4 text-white">
+      <div className="bg-gray-900 border border-gray-700 shadow-xl rounded-2xl p-8 max-w-md w-full">
+        <h2 className="text-3xl font-bold text-center text-indigo-400 mb-6">Welcome Back</h2>
 
-        <form className="space-y-4" onSubmit={handleLogin}>
+        <form className="space-y-5" onSubmit={handleLogin}>
           <div>
-            <label className="block mb-1 text-sm font-semibold">Email</label>
+            <label className="block text-sm font-medium mb-1">Email</label>
             <input
               type="email"
               name="email"
               value={loginInfo.email}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-400"
+              className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               placeholder="you@example.com"
             />
           </div>
 
           <div>
-            <label className="block mb-1 text-sm font-semibold">Password</label>
+            <label className="block text-sm font-medium mb-1">Password</label>
             <input
               type="password"
               name="password"
               value={loginInfo.password}
               onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-md focus:ring-2 focus:ring-indigo-400"
-              placeholder="Enter your password"
+              className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-600 text-white placeholder-gray-400 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              placeholder="••••••••"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-md font-medium hover:bg-indigo-700 transition"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg font-semibold transition"
           >
             Login
           </button>
         </form>
 
-        <div className="my-4 text-center text-sm text-gray-500">or</div>
+        <div className="my-4 text-center text-gray-400 text-sm">or</div>
 
         <button
           onClick={handleGoogleLogin}
-          className="w-full flex items-center justify-center gap-2 border py-2 rounded-md hover:bg-gray-100 transition"
+          className="w-full flex items-center justify-center gap-3 border border-gray-600 py-2 rounded-lg hover:bg-gray-800 transition"
         >
-          <FcGoogle size={24} />
-          Continue with Google
+          <FcGoogle size={22} />
+          <span className="text-sm">Continue with Google</span>
         </button>
 
-        <p className="mt-4 text-center text-sm">
+        <p className="mt-5 text-center text-sm text-gray-400">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-indigo-600 hover:underline font-semibold">
+          <Link to="/signup" className="text-indigo-400 hover:underline font-medium">
             Sign up
           </Link>
         </p>
