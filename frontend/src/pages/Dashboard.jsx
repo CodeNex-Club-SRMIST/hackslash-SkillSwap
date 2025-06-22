@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SkillSuggestion from '../components/SkillSuggestion';
+import ChatAssistant from '../components/ChatAssistant';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ function Dashboard() {
           <p><strong>Skill You Want:</strong> {skillWant}</p>
         </div>
 
-        <div className="flex gap-4">
+        <div className="flex gap-4 mb-8">
           <button
             onClick={() => navigate('/profile')}
             className="bg-indigo-600 hover:bg-indigo-700 px-6 py-2 rounded-lg font-semibold"
@@ -67,6 +69,12 @@ function Dashboard() {
             🔒 Logout
           </button>
         </div>
+
+        {/* 🔍 Smart Suggestions */}
+        <SkillSuggestion offeredSkill={skillOffer} wantedSkill={skillWant} />
+
+        {/* 💬 Chat Assistant */}
+        <ChatAssistant />
       </div>
     </section>
   );
