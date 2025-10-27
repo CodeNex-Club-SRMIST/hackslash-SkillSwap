@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import socket from '../socket'; // or './socket' if you're in the same folder
+import api from '../services/api';
 
 function Profile() {
   const [name, setName] = useState('');
@@ -19,15 +20,11 @@ function Profile() {
 
     // Send to backend
     try {
-      await fetch('http://localhost:5000/api/profile', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: localStorage.getItem('userId'), // Ensure userId is set during login/signup
-          name,
-          skillOffer,
-          skillWant
-        })
+      await api.post('/profile', {
+        userId: localStorage.getItem('userId'), // Ensure userId is set during login/signup
+        name,
+        skillOffer,
+        skillWant,
       });
     } catch (error) {
       console.error('Error saving profile to backend:', error);

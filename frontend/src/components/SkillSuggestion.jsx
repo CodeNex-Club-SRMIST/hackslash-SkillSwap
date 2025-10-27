@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../services/api';
 
 function SkillSuggestion({ offeredSkill, wantedSkill }) {
   const [suggestions, setSuggestions] = useState('');
@@ -7,12 +8,7 @@ function SkillSuggestion({ offeredSkill, wantedSkill }) {
   const fetchSuggestions = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ai/skill-match', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ offeredSkill, wantedSkill }),
-      });
-      const data = await res.json();
+      const { data } = await api.post('/ai/skill-match', { offeredSkill, wantedSkill });
       setSuggestions(data.suggestions || 'No suggestions found.');
     } catch {
       setSuggestions('⚠️ Error fetching suggestions.');

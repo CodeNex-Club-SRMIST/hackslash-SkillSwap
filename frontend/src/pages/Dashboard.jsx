@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SkillSuggestion from '../components/SkillSuggestion';
 import ChatAssistant from '../components/ChatAssistant';
+import api from '../services/api';
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -24,8 +25,7 @@ function Dashboard() {
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/api/profile/${userId}`);
-        const data = await res.json();
+        const { data } = await api.get(`/profile/${userId}`);
 
         if (data.success) {
           setSkillOffer(data.profile.skillOffer);

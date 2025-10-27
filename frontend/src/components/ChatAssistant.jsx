@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../services/api';
 
 function ChatAssistant() {
   const [input, setInput] = useState('');
@@ -9,12 +10,7 @@ function ChatAssistant() {
     if (!input.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: input }),
-      });
-      const data = await res.json();
+      const { data } = await api.post('/ai/chat', { prompt: input });
       setResponse(data.reply || 'No response.');
     } catch {
       setResponse('⚠️ Failed to get a reply.');
